@@ -214,6 +214,10 @@ def cli(
             api_base=api_base,
         )
         llm = LLMClient(config=config)
+        
+        # Validate LLM connection before starting scan
+        await llm.validate()
+        
         tracer = Tracer(run_dir=Path(scan_config.output_dir))
         tracer.log("scan_config", asdict(scan_config))
 
@@ -401,6 +405,9 @@ def cli(
                 api_base=api_base,
             )
             llm = LLMClient(config=config)
+            
+            # Validate LLM connection before starting scan
+            await llm.validate()
 
             run_name = Path(scan_config.output_dir).name
             parsed_skills = [s.strip() for s in skills.split(",") if s.strip()]

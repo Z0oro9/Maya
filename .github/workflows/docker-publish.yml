@@ -89,7 +89,7 @@ jobs:
           path: sbom.spdx.json
 
       - name: Build companion APKs via Docker
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name != 'pull_request'
         run: |
           mkdir -p assets/android/apk
           docker build \
@@ -99,7 +99,7 @@ jobs:
             .
 
       - name: Upload companion APK artifacts
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: companion-apks
