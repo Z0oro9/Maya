@@ -11,7 +11,7 @@ import click
 
 from maya.agents.checkpointing import apply_checkpoint, load_latest_checkpoint
 from maya.agents.maya_agent import MayaAgent
-from maya.commands.apk_builder import build_apk
+from maya.commands.apk_builder import build_apk as build_apk_command
 from maya.llm import LLMClient, LLMConfig
 from maya.models import ScanConfig
 from maya.skills import list_available_skills_with_sources, set_cli_skills_dir
@@ -53,8 +53,8 @@ def _is_headless() -> bool:
 
 @click.command()
 # ── Core args (the only ones you need) ──────────────────────
-@click.option("--target", default=None, help="Target package name (e.g. com.app.example)")
-@click.option("--package", default=None, type=click.Path(), help="Path to APK or IPA file")
+@click.option("-t", "--target", default=None, help="Target package name (e.g. com.app.example), or APK/IPA path")
+@click.option("-p", "--package", default=None, type=click.Path(), help="Path to APK or IPA file")
 @click.option("--device", default=None, help="Device serial (adb serial / iOS UDID)")
 # ── Optional overrides ──────────────────────────────────────
 @click.option("--platform", default=None, type=click.Choice(["android", "ios"]), help="Override auto-detected platform")
@@ -81,7 +81,9 @@ def _is_headless() -> bool:
 @click.option("--list-skills", "list_skills_flag", is_flag=True, default=False, hidden=True)
 @click.option("--role", default="root", type=click.Choice(["root", "static", "dynamic", "api", "exploit"]), hidden=True)
 # ── APK Build options (hidden, activated with --build-apk) ─────
-@click.option("--build-apk", is_flag=True, default=False, hidden=True, help="Build and sign companion APK")
+@click.option(
+    "--build-apk", is_flag=True, default=False, hidden=True, help="Build and sign companion APK"
+)
 @click.option("--apk-sign-mode", default="uber", type=click.Choice(["uber", "keystore"]), hidden=True)
 @click.option("--apk-keystore", default=None, type=click.Path(exists=True), hidden=True)
 @click.option("--apk-key-alias", default=None, hidden=True)
@@ -109,7 +111,7 @@ def cli(
     agent_skills: tuple[str, ...],
     list_skills_flag: bool,
     role: str,
-    build_apk_flag: bool,
+    build_apk: bool,
     apk_sign_mode: str,
     apk_keystore: str | None,
     apk_key_alias: str | None,
@@ -126,8 +128,8 @@ def cli(
     """
 
     # ── Handle --build-apk (runs independently of scans) ──────
-    if build_apk_flag:
-        exit_code = build_apk(
+    if build_apk:
+        exit_code = build_apk_command(
             sign_mode=apk_sign_mode,
             keystore_path=apk_keystore,
             key_alias=apk_key_alias,
@@ -149,9 +151,20 @@ def cli(
             click.echo(f"- {entry['category']}/{entry['skill']}{description}")
         return
 
+    # ── Compatibility shortcut: maya -t app.apk / app.ipa ──
+    if target and not package:
+        maybe_path = Path(target)
+        if _detect_platform(target) and maybe_path.exists():
+            package = target
+            target = maybe_path.stem
+
+    # ── If only --package is provided, derive target name ───
+    if package and not target:
+        target = Path(package).stem
+
     # ── Validate --target is provided for scans ─────────────
     if not target:
-        raise click.UsageError("Missing option '--target'. Required for scanning.")
+        raise click.UsageError("Missing option '--target'. Required for scanning. Tip: you can use 'maya -t app.apk'.")
 
     # ── Auto-detect platform from package extension ─────────
     if platform is None:

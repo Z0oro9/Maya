@@ -6,7 +6,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
 
 def _check_command(name: str) -> bool:
@@ -31,13 +30,16 @@ def build_apk_buildx(
     dockerfile: Path,
     output_dir: Path,
     sign_mode: str = "uber",
-    keystore_path: Optional[Path] = None,
-    key_alias: Optional[str] = None,
-    store_pass: Optional[str] = None,
-    key_pass: Optional[str] = None,
-    repo_root: Path = Path.cwd(),
+    keystore_path: Path | None = None,
+    key_alias: str | None = None,
+    store_pass: str | None = None,
+    key_pass: str | None = None,
+    repo_root: Path | None = None,
 ) -> bool:
     """Build APK using Docker buildx (modern approach)."""
+    if repo_root is None:
+        repo_root = Path.cwd()
+
     build_args = ["--build-arg", f"SIGN_MODE={sign_mode}"]
 
     if sign_mode == "keystore":
@@ -90,13 +92,16 @@ def build_apk_traditional(
     dockerfile: Path,
     output_dir: Path,
     sign_mode: str = "uber",
-    keystore_path: Optional[Path] = None,
-    key_alias: Optional[str] = None,
-    store_pass: Optional[str] = None,
-    key_pass: Optional[str] = None,
-    repo_root: Path = Path.cwd(),
+    keystore_path: Path | None = None,
+    key_alias: str | None = None,
+    store_pass: str | None = None,
+    key_pass: str | None = None,
+    repo_root: Path | None = None,
 ) -> bool:
     """Build APK without buildx (fallback for older Docker versions)."""
+    if repo_root is None:
+        repo_root = Path.cwd()
+
     print("[*] Docker buildx not available; using traditional build + extract fallback...", file=sys.stderr)
 
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -159,10 +164,10 @@ def build_apk_traditional(
 
 def build_apk(
     sign_mode: str = "uber",
-    keystore_path: Optional[str] = None,
-    key_alias: Optional[str] = None,
-    store_pass: Optional[str] = None,
-    key_pass: Optional[str] = None,
+    keystore_path: str | None = None,
+    key_alias: str | None = None,
+    store_pass: str | None = None,
+    key_pass: str | None = None,
 ) -> int:
     """
     Main APK build entry point.
@@ -182,7 +187,11 @@ def build_apk(
         return 1
 
     if not _check_command("docker"):
-        print("ERROR: docker command not found. Install Docker Desktop: https://docs.docker.com/get-docker/", file=sys.stderr)
+        print(
+            "ERROR: docker command not found. Install Docker Desktop: "
+            "https://docs.docker.com/get-docker/",
+            file=sys.stderr,
+        )
         return 1
 
     keystore_p = Path(keystore_path) if keystore_path else None

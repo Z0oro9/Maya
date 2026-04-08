@@ -27,6 +27,8 @@ object CompanionHttpServer : Closeable {
     private var acceptThread: Thread? = null
     private var executor: ExecutorService? = null
 
+    fun isRunning(): Boolean = running.get()
+
     @Synchronized
     fun start(port: Int = defaultPort()): Result<Int> {
         if (running.get()) {
@@ -56,6 +58,7 @@ object CompanionHttpServer : Closeable {
             acceptThread?.start()
 
             println("MOBSEC Companion Server v2.0.0 listening on 0.0.0.0:$port")
+            CompanionLog.add("Server started on port $port")
             port
         }
     }
@@ -63,6 +66,7 @@ object CompanionHttpServer : Closeable {
     @Synchronized
     override fun close() {
         running.set(false)
+        CompanionLog.add("Server stopped")
         try {
             server?.close()
         } catch (_: Exception) {
@@ -133,6 +137,7 @@ private fun handleClient(socket: Socket) {
         // Route
         val (statusCode, responseBody) = route(method, path, body)
 
+        CompanionLog.add("$method $path → $statusCode")
         // Send HTTP response
         writer.print("HTTP/1.1 $statusCode\r\n")
         writer.print("Content-Type: application/json\r\n")

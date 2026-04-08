@@ -8,4 +8,6 @@ containers
 tests
 .github
 companion_app
+!companion_app/android
+!companion_app/android/**
 node_modules

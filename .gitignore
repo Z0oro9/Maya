@@ -35,3 +35,9 @@ htmlcov/
 .maya/
 .env
 .env.*
+.agent/
+.agents/
+logs/
+maya_runs/
+maya_scan_results/
+assets/android/

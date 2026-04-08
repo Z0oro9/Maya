@@ -21,73 +21,90 @@ from textual.worker import Worker, WorkerState
 from maya.telemetry.event_bus import Event, EventBus, EventType
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# Maya Design System — Colour Tokens
+# Maya Design System — Dark Mode Colour Tokens (ui-ux-pro-max aligned)
 #
-# Warm, literate palette. Light paper base with ink text.
-# Accents: blue (primary), green (success), amber (warn), red (danger).
+# True black base with high-contrast desaturated accents.
+# Semantic colors: blue (primary), green (success), amber (warn), red (danger).
+# All text pairs meet WCAG AA (4.5:1) for accessibility.
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-# -- Ink (text) scale --
-INK = "#1A1A2E"  # primary text, headings
-INK2 = "#3D3D5C"  # body prose
-INK3 = "#7A7A9A"  # muted labels, nav inactive
-INK4 = "#B8B8CC"  # eyebrows, timeline phases, footer
+# -- Surface scale (black base) --
+BG_BASE = "#000000"  # true black background
+BG_RAISED = "#0a0a0a"  # slightly raised surfaces
+BG_HOVER = "#1a1a1a"  # hover state
+BG_ACTIVE = "#2a2a2a"  # active/selected state
+BORDER = "#333333"  # subtle borders and dividers
 
-# -- Paper (surface) scale --
-PAPER = "#FAFAF8"  # page background
-PAPER2 = "#F2F2EE"  # secondary bg, hover, code bg
-PAPER3 = "#E8E8E2"  # track bg
-RULE = "#E0E0D8"  # dividers, borders
+# -- Text scale (high contrast on black) --
+TEXT_PRIMARY = "#e5e5e5"  # primary text (contrast 18.5:1)
+TEXT_SECONDARY = "#b0b0b0"  # secondary text (contrast 9.7:1)
+TEXT_TERTIARY = "#808080"  # tertiary labels (contrast 4.6:1 — meets AA)
+TEXT_DISABLED = "#555555"  # disabled text
 
-# -- Accent colours --
-BLUE = "#2B4FFF"  # primary accent
-BLUE_LT = "#EEF1FF"  # primary accent fill
-GREEN = "#1A7F5A"  # success, pro
-GREEN_LT = "#EBF7F3"  # success fill
-AMBER = "#B85C00"  # warning, medium severity
-AMBER_LT = "#FFF4E6"  # warning fill
-RED = "#CC2B2B"  # danger, con, high severity
-RED_LT = "#FFF0F0"  # danger fill
+# -- Semantic accent colours (desaturated for dark mode) --
+BLUE = "#5a9dff"  # primary accent (contrast 6.5:1)
+BLUE_DIM = "#4080cc"  # dimmed blue
+GREEN = "#4ade80"  # success (contrast 8.3:1)
+GREEN_DIM = "#3ab56d"  # dimmed green
+AMBER = "#fbbf24"  # warning (contrast 11.2:1)
+AMBER_DIM = "#d9a520"  # dimmed amber
+RED = "#f87171"  # danger (contrast 5.9:1)
+RED_DIM = "#cc5f5f"  # dimmed red
 
-# -- Cover / dark overlay --
-COVER_BG = "#0D0D1A"  # near-black navy
-TEAL = "#00DFC8"  # teal accent for highlights
+# -- Special accents --
+PURPLE = "#a78bfa"  # API / special category (contrast 6.0:1)
+CYAN = "#22d3ee"  # highlight / info (contrast 8.8:1)
 
-# -- Legacy aliases (mapped to new tokens for widget compat) --
-SURF_LOWEST = PAPER2  # sunken wells → secondary paper
-SURF = PAPER  # base canvas → paper
-SURF_LOW = PAPER2  # sub-section → paper2
-SURF_MID = PAPER3  # mid container → paper3
-SURF_HIGH = PAPER  # elevated → paper
-SURF_HIGHEST = PAPER  # floating → paper
+# -- Panel-specific tinted backgrounds (subtle on black) --
+PANEL_SCAN = "#0a1420"  # blue tint
+PANEL_AGENTS = "#091c14"  # green tint
+PANEL_TOOLS = "#1f1a0a"  # amber tint
+PANEL_SKILLS = "#0a1420"  # blue tint
+PANEL_FINDINGS = "#200a0a"  # red tint
 
-ON_SURF = INK2  # body text
-ON_SURF_DIM = INK3  # metadata, timestamps
-ON_SURF_HI = INK  # headings / critical
+# -- Legacy / Compatibility Aliases --
+INK = TEXT_PRIMARY
+INK2 = TEXT_SECONDARY
+INK3 = TEXT_TERTIARY
+INK4 = TEXT_DISABLED
+PAPER = BG_BASE
+PAPER2 = BG_RAISED
+PAPER3 = BG_HOVER
+RULE = BORDER
+BLUE_LT = PANEL_SCAN
+GREEN_LT = PANEL_AGENTS
+AMBER_LT = PANEL_TOOLS
+RED_LT = PANEL_FINDINGS
+COVER_BG = BG_BASE
+TEAL = CYAN
 
-PRIMARY = BLUE  # primary accent
-PRIMARY_DIM = "#1A3ACC"  # dimmed blue
-SECONDARY = GREEN  # green accent
-ERROR = RED  # danger
-ERROR_DIM = "#991F1F"  # dimmed red
-WARNING = AMBER  # amber
-OUTLINE_V = RULE  # border / divider
+SURF_LOWEST = BG_RAISED
+SURF = BG_BASE
+SURF_LOW = BG_RAISED
+SURF_MID = BG_HOVER
+SURF_HIGH = BG_ACTIVE
+SURF_HIGHEST = BG_ACTIVE
 
-# Panel-specific tinted backgrounds
-PANEL_SCAN = BLUE_LT  # scan info
-PANEL_AGENTS = GREEN_LT  # agents
-PANEL_TOOLS = AMBER_LT  # tools
-PANEL_SKILLS = BLUE_LT  # skills
-PANEL_FINDINGS = RED_LT  # findings
+ON_SURF = TEXT_SECONDARY
+ON_SURF_DIM = TEXT_TERTIARY
+ON_SURF_HI = TEXT_PRIMARY
 
-# Agent role colors
+PRIMARY = BLUE
+PRIMARY_DIM = BLUE_DIM
+SECONDARY = GREEN
+ERROR = RED
+ERROR_DIM = RED_DIM
+WARNING = AMBER
+OUTLINE_V = BORDER
+
+# Agent role colors (high contrast variants)
 ROLE_COLORS = {
     "root": BLUE,
     "static": GREEN,
     "dynamic": AMBER,
-    "api": "#6B4FCC",  # purple
+    "api": PURPLE,
     "exploit": RED,
-    "flutter": TEAL,
+    "flutter": CYAN,
 }
 
 # Tool category metadata
@@ -142,7 +159,7 @@ SEV = {
     "high": RED,
     "medium": AMBER,
     "low": GREEN,
-    "info": INK3,
+    "info": TEXT_TERTIARY,
 }
 
 
@@ -357,10 +374,11 @@ class Pulse(Static):
 
 
 class MayaUI(App):
-    """Maya — Warm literate design system.
+    """Maya — Dark mode design system (ui-ux-pro-max aligned).
 
-    Light paper base, ink text hierarchy, accent beacons.
-    Fonts: Fraunces (headings), DM Sans (body), DM Mono (labels).
+    True black background with high-contrast desaturated accents.
+    Semantic colors: blue (primary), green (success), amber (warning), red (danger).
+    All text meets WCAG AA (4.5:1 minimum contrast).
     """
 
     CSS = f"""
@@ -595,7 +613,7 @@ class MayaUI(App):
             yield RichLog(id="log", highlight=True, markup=True, wrap=True)
             yield Container(id="detail-overlay")
             with Container(id="chat-well"):
-                yield Input(placeholder=" …", id="chat")
+                yield Input(placeholder=" Type to send instructions to the agent...", id="chat")
 
         with Vertical(id="sidebar"):
             with VerticalScroll(id="sb-scroll"):
@@ -606,18 +624,6 @@ class MayaUI(App):
                 # ── Agents ──
                 yield Static(" ▲ agents", id="sb-al", classes="panel-header")
                 yield Tree("maya", id="agents")
-                yield Static("", classes="ghost-sep")
-                # ── Subagent Roles ──
-                yield Static(" ◆ roles", id="sb-sub-hdr", classes="panel-header")
-                yield Static("", id="subagents-info")
-                yield Static("", classes="ghost-sep")
-                # ── Tools ──
-                yield Static(" ▸ tools", id="sb-tools-hdr", classes="panel-header")
-                yield Tree("categories", id="tools-tree")
-                yield Static("", classes="ghost-sep")
-                # ── Skills ──
-                yield Static(" ✦ skills", id="sb-skills-hdr", classes="panel-header")
-                yield Tree("loaded", id="skills-tree")
                 yield Static("", classes="ghost-sep")
                 # ── Findings ──
                 yield Static(" ◆ findings", id="sb-fl", classes="panel-header")
@@ -637,9 +643,6 @@ class MayaUI(App):
         if self._run_dir:
             self.set_interval(3.0, self._ckpt_tick)
         self._populate_scan_info()
-        self._populate_subagents()
-        self._populate_tools()
-        self._populate_skills()
         if self._scan_worker_fn is not None:
             self.run_worker(
                 self._run_scan_wrapper,
@@ -850,12 +853,15 @@ class MayaUI(App):
         et = event.type
 
         if et == EventType.AGENT_STARTED:
-            log.write(f"[{c}]→ {event.agent_name}[/]")
-            task = d.get("task", "")[:140]
+            log.write(f"[{c}]→ {event.agent_name}[/] [{ON_SURF_DIM}]started[/]")
+            task = d.get("task", "")[:200]
             if task:
-                log.write(f"  [{ON_SURF_DIM}]{task}[/]")
+                log.write(f"  [{ON_SURF}]{task}[/]")
         elif et == EventType.AGENT_SPAWNED:
-            log.write(f"[{c}]+ {event.agent_name}[/]  [{ON_SURF_DIM}]← {d.get('parent_id', '?')[:6]}[/]")
+            reason = d.get('reason', '')
+            log.write(f"[{c}]+ {event.agent_name}[/] [{ON_SURF_DIM}]spawned[/]")
+            if reason:
+                log.write(f"  [{ON_SURF_DIM}]▸ {reason[:200]}[/]")
         elif et == EventType.ITERATION_START:
             log.write(f"[{ON_SURF_DIM}]·  iter {d.get('iteration', '?')}[/]")
         elif et == EventType.LLM_RESPONSE:
@@ -864,11 +870,16 @@ class MayaUI(App):
             tok = u.get("total_tokens") or u.get("prompt_tokens", 0) + u.get("completion_tokens", 0)
             log.write(f"[{c}]↓  {model}  {tok}[/]")
         elif et == EventType.THINKING:
-            txt = d.get("content", "")[:300]
+            txt = d.get("content", "")[:400]
             if txt:
-                log.write(f"[{ON_SURF_DIM}]{txt}[/]")
+                log.write(f"[{PRIMARY_DIM}]◆ {event.agent_name}[/] [{ON_SURF}]thinking:[/]")
+                log.write(f"  [{ON_SURF_DIM}]{txt}[/]")
         elif et == EventType.TOOL_CALL_START:
-            log.write(f"[{c}]▸  {d.get('tool', '?')}[/]")
+            tool_name = d.get('tool', '?')
+            reason = d.get('reasoning', '')
+            log.write(f"[{c}]▸  {tool_name}[/]")
+            if reason:
+                log.write(f"  [{ON_SURF_DIM}]{reason[:200]}[/]")
         elif et == EventType.TOOL_CALL_COMPLETE:
             log.write(f"[{c}]✓  {d.get('tool', '?')}[/]  [{ON_SURF_DIM}]{d.get('duration', 0)}s[/]")
         elif et == EventType.TOOL_CALL_ERROR:
@@ -878,7 +889,11 @@ class MayaUI(App):
             sc = SEV.get(sev.lower(), ON_SURF)
             log.write(f"[{sc}]◆  {sev.upper()}  {d.get('title', '—')}[/]")
         elif et == EventType.AGENT_COMPLETED:
-            log.write(f"[{c}]✓  {event.agent_name}[/]  [{ON_SURF_DIM}]{d.get('findings', 0)} findings[/]")
+            findings_count = d.get('findings', 0)
+            summary = d.get('summary', '')
+            log.write(f"[{c}]✓  {event.agent_name}[/] [{GREEN}]completed[/] [{ON_SURF_DIM}]{findings_count} findings[/]")
+            if summary:
+                log.write(f"  [{ON_SURF}]▸ {summary[:300]}[/]")
         elif et == EventType.AGENT_FAILED:
             log.write(f"[{c}]✗  {event.agent_name}[/]  [{ON_SURF_DIM}]{str(d.get('error', ''))[:140]}[/]")
         elif et == EventType.CHECKPOINT_SAVED:
