@@ -1,0 +1,103 @@
+﻿FFF....ssssssssssssssssss................FFFFFFFFFFFFFFFFFFFFFFFFsss.FF. [ 81%]
+...............F                                                         [100%]
+================================== FAILURES ===================================
+E   TypeError: string indices must be integers, not 'str'
+C:\Users\rohit\Downloads\MOBSEC\tests\test_agent_graph_tools.py:23: TypeError: string indices must be integers, not 'str'
+E   TypeError: string indices must be integers, not 'str'
+C:\Users\rohit\Downloads\MOBSEC\tests\test_agent_graph_tools.py:47: TypeError: string indices must be integers, not 'str'
+E   assert 5 == 1
+C:\Users\rohit\Downloads\MOBSEC\tests\test_agent_loop.py:28: assert 5 == 1
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:118: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:134: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:139: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:144: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:149: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:154: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:171: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:178: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:194: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:199: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:203: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:218: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:233: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:238: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:253: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:258: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:264: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:270: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:275: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:280: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:285: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:301: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:306: assert 1 == 0
+E   assert 1 == 0
+C:\Users\rohit\Downloads\MOBSEC\tests\test_drozer_companion.py:311: assert 1 == 0
+E   TypeError: string indices must be integers, not 'str'
+C:\Users\rohit\Downloads\MOBSEC\tests\test_executor.py:26: TypeError: string indices must be integers, not 'str'
+E   TypeError: string indices must be integers, not 'str'
+C:\Users\rohit\Downloads\MOBSEC\tests\test_executor_sandbox_route.py:35: TypeError: string indices must be integers, not 'str'
+E   TypeError: string indices must be integers, not 'str'
+---------------------------- Captured stderr call -----------------------------
+  [root] tool: shared_context_write
+C:\Users\rohit\Downloads\MOBSEC\tests\test_smoke_shared_dynamic_tools.py:13: TypeError: string indices must be integers, not 'str'
+============================== warnings summary ===============================
+..\..\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\litellm\litellm_core_utils\logging_utils.py:273: 17 warnings
+  C:\Users\rohit\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\litellm\litellm_core_utils\logging_utils.py:273: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    if asyncio.iscoroutinefunction(func):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_agent_graph_tools.py::test_create_view_and_message_tools - ...
+FAILED tests/test_agent_graph_tools.py::test_send_message_fails_for_unknown_agent
+FAILED tests/test_agent_loop.py::test_agent_loop_completes_on_agent_finish - ...
+FAILED tests/test_drozer_companion.py::TestADBConnectivity::test_adb_shell_basic
+FAILED tests/test_drozer_companion.py::TestPackageAnalysis::test_package_list
+FAILED tests/test_drozer_companion.py::TestPackageAnalysis::test_package_list_third_party
+FAILED tests/test_drozer_companion.py::TestPackageAnalysis::test_package_info
+FAILED tests/test_drozer_companion.py::TestPackageAnalysis::test_package_apk_path
+FAILED tests/test_drozer_companion.py::TestPackageAnalysis::test_package_permissions
+FAILED tests/test_drozer_companion.py::TestActivityAnalysis::test_activity_resolver_table
+FAILED tests/test_drozer_companion.py::TestActivityAnalysis::test_browsable_activities
+FAILED tests/test_drozer_companion.py::TestContentProviderAnalysis::test_content_query_settings
+FAILED tests/test_drozer_companion.py::TestContentProviderAnalysis::test_content_query_secure_settings
+FAILED tests/test_drozer_companion.py::TestContentProviderAnalysis::test_provider_info
+FAILED tests/test_drozer_companion.py::TestBroadcastAnalysis::test_receiver_resolver_table
+FAILED tests/test_drozer_companion.py::TestServiceAnalysis::test_running_services
+FAILED tests/test_drozer_companion.py::TestServiceAnalysis::test_service_resolver
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_device_model - as...
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_android_version
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_sdk_version - ass...
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_selinux_status - ...
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_build_fingerprint
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_network_interfaces
+FAILED tests/test_drozer_companion.py::TestDeviceInfo::test_process_list - as...
+FAILED tests/test_drozer_companion.py::TestVulnerabilityScanner::test_debuggable_check
+FAILED tests/test_drozer_companion.py::TestVulnerabilityScanner::test_root_indicators
+FAILED tests/test_drozer_companion.py::TestVulnerabilityScanner::test_ca_cert_enumeration
+FAILED tests/test_executor.py::test_executor_injects_agent_state - TypeError:...
+FAILED tests/test_executor_sandbox_route.py::test_executor_uses_sandbox_http_when_available
+FAILED tests/test_smoke_shared_dynamic_tools.py::test_smoke_shared_context_and_skill_tools
+30 failed, 37 passed, 21 skipped, 3 deselected, 17 warnings in 448.76s (0:07:28)
