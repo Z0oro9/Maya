@@ -3,6 +3,8 @@ from __future__ import annotations
 import importlib
 import json
 import os
+import re
+import shlex
 import subprocess
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -87,12 +89,14 @@ class FridaSessionManager:
             tmp.write(script)
             script_path = Path(tmp.name)
         try:
+            # Security: Validate package name to prevent command injection
+            safe_package = _validate_package_name(package_name)
             host = os.environ.get("FRIDA_HOST")
             if host:
-                cmd = ["frida", "-H", host, "-n", package_name, "-l", str(script_path), "--no-pause", "-q"]
+                cmd = ["frida", "-H", host, "-n", safe_package, "-l", str(script_path), "--no-pause", "-q"]
             else:
-                cmd = ["frida", "-U", "-n", package_name, "-l", str(script_path), "--no-pause", "-q"]
-            proc = subprocess.run(cmd, text=True, capture_output=True, timeout=90)
+                cmd = ["frida", "-U", "-n", safe_package, "-l", str(script_path), "--no-pause", "-q"]
+            proc = subprocess.run(cmd, text=True, capture_output=True, timeout=90, check=False)
             return {
                 "status": "ok",
                 "mode": "cli",
@@ -122,6 +126,26 @@ class FridaSessionManager:
 
 
 _FRIDA_MANAGER = FridaSessionManager()
+
+# Security: Workspace root for path validation
+_WORKSPACE_ROOT = Path("/workspace").resolve()
+
+
+def _validate_package_name(package: str) -> str:
+    """Validate Android package name to prevent command injection."""
+    if not re.match(r"^[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)*$", package):
+        raise ValueError(f"Invalid package name: {package}")
+    return package
+
+
+def _validate_path(path: str) -> Path:
+    """Validate file path is within workspace to prevent path traversal."""
+    resolved = Path(path).resolve()
+    try:
+        resolved.relative_to(_WORKSPACE_ROOT)
+    except ValueError:
+        raise ValueError(f"Path outside workspace: {path}") from None
+    return resolved
 
 
 def _auth_ok(authorization: str | None) -> bool:
@@ -157,14 +181,18 @@ def execute(req: ExecuteRequest, authorization: str | None = Header(default=None
         result = _dispatch_tool(req.agent_id, req.tool_name, req.kwargs)
         return {"result": result, "error": None}
     except Exception as exc:  # noqa: BLE001
-        return {"result": None, "error": str(exc)}
+        # Security: Sanitize exception to avoid information disclosure
+        error_msg = f"{type(exc).__name__}: {str(exc)[:200]}"
+        return {"result": None, "error": error_msg}
 
 
 def _dispatch_tool(agent_id: str, tool_name: str, kwargs: dict[str, Any]) -> dict[str, Any]:
     if tool_name == "terminal_execute":
         command = kwargs["command"]
         timeout = int(kwargs.get("timeout", "60"))
-        proc = subprocess.run(command, shell=True, text=True, capture_output=True, timeout=timeout)  # noqa: S602
+        # Security: Parse command safely without shell injection
+        cmd_parts = shlex.split(command) if isinstance(command, str) else command
+        proc = subprocess.run(cmd_parts, text=True, capture_output=True, timeout=timeout, check=False)
         return {"stdout": proc.stdout, "stderr": proc.stderr, "exit_code": proc.returncode}
 
     if tool_name == "python_execute":
@@ -189,11 +217,13 @@ def _dispatch_tool(agent_id: str, tool_name: str, kwargs: dict[str, Any]) -> dic
         return _FRIDA_MANAGER.run_script(agent_id=agent_id, package_name=package_name, script=script)
 
     if tool_name == "file_read":
-        path = Path(kwargs["path"]).resolve()
+        # Security: Validate path to prevent traversal attacks
+        path = _validate_path(kwargs["path"])
         return {"content": path.read_text(encoding="utf-8")}
 
     if tool_name == "file_write":
-        path = Path(kwargs["path"]).resolve()
+        # Security: Validate path to prevent traversal attacks
+        path = _validate_path(kwargs["path"])
         content = str(kwargs["content"])
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
